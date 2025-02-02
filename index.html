@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redact</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+    <script defer src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Fraunces:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Redact</h1>
+        <div class="privacy-notice">
+            <p class="intro-text">This tool helps protect privacy in photos by automatically detecting and covering faces with black rectangles. You can also manually add rectangles to hide other identifying information. The downloaded image is stripped of all metadata (like location, device info, and timestamps).</p>
+            <p class="privacy-text">Your images stay on your device. Nothing is uploaded or stored anywhere else.</p>
+            <details>
+                <summary>How does this work?</summary>
+                <div class="privacy-details">
+                    <p>This tool works entirely within your web browser, like a calculator app. When you select an image:</p>
+                    <ul>
+                        <li>The image stays on your computer - it's never sent to any server or cloud</li>
+                        <li>All processing happens directly on your device</li>
+                        <li>When you close this tab, everything is deleted</li>
+                        <li>You can even use this tool offline</li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+        <div class="upload-container">
+            <input type="file" id="imageUpload" accept="image/*">
+            <label for="imageUpload" class="upload-button">Choose an image</label>
+        </div>
+        <div class="image-container">
+            <img id="uploadedImage" src="#" alt="Uploaded image">
+        </div>
+        <div id="manualControls" class="manual-controls" style="display: none;">
+            <button id="drawMode" class="control-button">Draw Additional Rectangles</button>
+            <button id="finishDrawing" class="control-button" style="display: none;">Finish Drawing</button>
+            <p class="instructions">Click and drag to draw rectangles. Hover over any rectangle to delete it.</p>
+        </div>
+        <div id="downloadControls" class="download-controls" style="display: none;">
+            <button id="downloadButton" class="control-button download-button">
+                <span>Download Redacted Image</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 
