@@ -48,23 +48,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Create canvas
             currentCanvas = document.createElement('canvas');
             
-            // Important: Set canvas size to match the actual image size
-            const displayWidth = uploadedImage.clientWidth;
-            const displayHeight = uploadedImage.clientHeight;
+            // Match canvas size to displayed image size
+            currentCanvas.width = uploadedImage.clientWidth;
+            currentCanvas.height = uploadedImage.clientHeight;
+            currentCanvas.style.width = uploadedImage.clientWidth + 'px';
+            currentCanvas.style.height = uploadedImage.clientHeight + 'px';
             
-            currentCanvas.width = displayWidth;
-            currentCanvas.height = displayHeight;
-            currentCanvas.style.width = displayWidth + 'px';
-            currentCanvas.style.height = displayHeight + 'px';
             currentCanvas.style.position = 'absolute';
             currentCanvas.style.top = '0';
             currentCanvas.style.left = '0';
             imageContainer.appendChild(currentCanvas);
 
+            // Add mouse event listeners
+            currentCanvas.addEventListener('mousedown', startDrawing);
+            currentCanvas.addEventListener('mousemove', draw);
+            currentCanvas.addEventListener('mouseup', stopDrawing);
+
             // Detect faces
             const detections = await faceapi
                 .detectAllFaces(uploadedImage, new faceapi.SsdMobilenetv1Options({
-                    minConfidence: 0.3
+                    minConfidence: 0.1,
+                    maxResults: 100
                 }))
                 .withFaceLandmarks();
 
