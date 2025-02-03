@@ -307,6 +307,7 @@ body {
 .privacy-details ul {
     margin-top: 0.75rem;
     padding-left: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .privacy-details li {
@@ -487,34 +488,30 @@ button:hover {
 }
 
 .coffee-link {
-    font-size: 11px;
     color: var(--grey);
     text-decoration: none;
-    opacity: 0.3;
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    transition: opacity 0.2s ease;
+    opacity: 0.5;
+    transition: all 0.2s ease;
     font-family: "Space Grotesk", sans-serif;
-    letter-spacing: 0.02em;
+    border-bottom: 1px solid transparent;
 }
 
 .coffee-link:hover {
-    opacity: 0.6;
+    opacity: 1;
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.privacy-details p:last-child {
+    margin-top: 1.5rem;
+    color: var(--grey);
+    font-size: 0.875rem;
 }
 
 @media (max-width: 768px) {
     .container {
         padding: 2rem 1.5rem;
         width: 100%;
-    }
-
-    .coffee-link {
-        top: 1rem;
-        right: 1rem;
-        position: absolute;
-        font-size: 11px;
-        opacity: 0.4;
     }
 
     .control-button {
