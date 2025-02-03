@@ -4,6 +4,8 @@
 
 Redact is a privacy-focused web tool that helps protect people's identities in photos by automatically detecting and covering faces with black rectangles. It's designed for activists, journalists, community organizers, and anyone who needs to protect privacy in visual documentation.
 
+**🌐 Try it now: [redact.miski.studio](https://redact.miski.studio/)**
+
 ## Example
 
 ![Example of Redact in action - protest photo with faces automatically redacted](example.jpg)
