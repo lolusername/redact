@@ -66,6 +66,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 currentCanvas.addEventListener('mousemove', draw);
                 currentCanvas.addEventListener('mouseup', stopDrawing);
 
+                // Add touch event listeners for mobile
+                currentCanvas.addEventListener('touchstart', handleTouchStart);
+                currentCanvas.addEventListener('touchmove', handleTouchMove);
+                currentCanvas.addEventListener('touchend', handleTouchEnd);
+
+                // Prevent scrolling while drawing
+                currentCanvas.addEventListener('touchmove', function(e) {
+                    if (isDrawing) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
                 // Detect faces
                 const detections = await faceapi
                     .detectAllFaces(uploadedImage, new faceapi.SsdMobilenetv1Options({
@@ -154,7 +166,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         deleteBtn.className = 'delete-button';
         deleteBtn.innerHTML = '×';
         deleteBtn.title = 'Delete';
-        deleteBtn.onclick = (e) => {
+        
+        // Handle both click and touch for delete button
+        const handleDelete = (e) => {
             e.stopPropagation();
             if (rect.isAutoDetected) {
                 lastDetections.splice(rect.index, 1);
@@ -164,6 +178,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const ctx = currentCanvas.getContext('2d');
             drawAllRectangles(ctx);
         };
+        
+        deleteBtn.onclick = handleDelete;
+        deleteBtn.ontouchend = handleDelete;
 
         // Add tooltip
         const tooltip = document.createElement('div');
@@ -225,6 +242,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         drawnRectangles.push(newRect);
+        isDrawing = false;
+
+        // Redraw everything including the new rectangle and its overlay
+        const ctx = currentCanvas.getContext('2d');
+        drawAllRectangles(ctx);
+    }
+
+    // Touch event handlers
+    function handleTouchStart(e) {
+        if (!drawingMode) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = currentCanvas.getBoundingClientRect();
+        const scaleX = currentCanvas.width / rect.width;
+        const scaleY = currentCanvas.height / rect.height;
+        
+        isDrawing = true;
+        startX = (touch.clientX - rect.left) * scaleX;
+        startY = (touch.clientY - rect.top) * scaleY;
+    }
+
+    function handleTouchMove(e) {
+        if (!isDrawing || !drawingMode) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = currentCanvas.getBoundingClientRect();
+        const scaleX = currentCanvas.width / rect.width;
+        const scaleY = currentCanvas.height / rect.height;
+        
+        const currentX = (touch.clientX - rect.left) * scaleX;
+        const currentY = (touch.clientY - rect.top) * scaleY;
+
+        const ctx = currentCanvas.getContext('2d');
+        drawAllRectangles(ctx);
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(
+            Math.min(startX, currentX),
+            Math.min(startY, currentY),
+            Math.abs(currentX - startX),
+            Math.abs(currentY - startY)
+        );
+    }
+
+    function handleTouchEnd(e) {
+        if (!isDrawing || !drawingMode) return;
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        const rect = currentCanvas.getBoundingClientRect();
+        const scaleX = currentCanvas.width / rect.width;
+        const scaleY = currentCanvas.height / rect.height;
+        
+        const endX = (touch.clientX - rect.left) * scaleX;
+        const endY = (touch.clientY - rect.top) * scaleY;
+
+        const newRect = {
+            x: Math.min(startX, endX),
+            y: Math.min(startY, endY),
+            width: Math.abs(endX - startX),
+            height: Math.abs(endY - startY),
+            isAutoDetected: false,
+            index: drawnRectangles.length
+        };
+
+        // Only add rectangle if it has a meaningful size
+        if (newRect.width > 5 && newRect.height > 5) {
+            drawnRectangles.push(newRect);
+        }
+        
         isDrawing = false;
 
         // Redraw everything including the new rectangle and its overlay
