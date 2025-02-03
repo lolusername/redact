@@ -4,6 +4,12 @@
 
 Redact is a privacy-focused web tool that helps protect people's identities in photos by automatically detecting and covering faces with black rectangles. It's designed for activists, journalists, community organizers, and anyone who needs to protect privacy in visual documentation.
 
+## Example
+
+![Example of Redact in action - protest photo with faces automatically redacted](example.jpg)
+
+*Example: A protest photo with faces automatically detected and redacted, protecting participants' identities while preserving the documentation of the event.*
+
 Beyond face detection, Redact automatically strips all metadata from your images. This includes:
 - GPS location data
 - Device information (camera model, serial number)
