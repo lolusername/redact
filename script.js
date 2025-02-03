@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isDeletionMode = false;
 
     // Load the required face-api.js models
-    const MODEL_URL = 'https://raw.githubusercontent.com/vladmandic/face-api/master/model/';
+    const MODEL_URL = 'lib/face-api/models/';
     try {
         await Promise.all([
             faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Detect faces
                 const detections = await faceapi
                     .detectAllFaces(uploadedImage, new faceapi.SsdMobilenetv1Options({
-                        minConfidence: 0.1,
+                        minConfidence: 0.3,
                         maxResults: 100
                     }))
                     .withFaceLandmarks();
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Draw detected faces
         lastDetections.forEach((detection, index) => {
-            const box = detection.detection.box;
+            const box = detection.detection.box;  // SsdMobilenetv1 format
             const padding = {
                 x: box.width * 0.2,
                 y: box.height * 0.2
