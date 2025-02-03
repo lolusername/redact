@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const imageUpload = document.getElementById('imageUpload');
     const uploadedImage = document.getElementById('uploadedImage');
-    const loading = document.getElementById('loading');
+    const loadingSpinner = document.getElementById('loadingSpinner');
     const manualControls = document.getElementById('manualControls');
     const drawModeButton = document.getElementById('drawMode');
     const finishDrawingButton = document.getElementById('finishDrawing');
@@ -43,47 +43,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         const file = event.target.files[0];
         uploadedImage.src = URL.createObjectURL(file);
         uploadedImage.style.display = 'block';
+        loadingSpinner.style.display = 'block'; // Show loading spinner
 
         uploadedImage.onload = async () => {
-            // Create canvas
-            currentCanvas = document.createElement('canvas');
-            
-            // Match canvas size to displayed image size
-            currentCanvas.width = uploadedImage.clientWidth;
-            currentCanvas.height = uploadedImage.clientHeight;
-            currentCanvas.style.width = uploadedImage.clientWidth + 'px';
-            currentCanvas.style.height = uploadedImage.clientHeight + 'px';
-            
-            currentCanvas.style.position = 'absolute';
-            currentCanvas.style.top = '0';
-            currentCanvas.style.left = '0';
-            imageContainer.appendChild(currentCanvas);
+            try {
+                // Create canvas
+                currentCanvas = document.createElement('canvas');
+                
+                // Match canvas size to displayed image size
+                currentCanvas.width = uploadedImage.clientWidth;
+                currentCanvas.height = uploadedImage.clientHeight;
+                currentCanvas.style.width = uploadedImage.clientWidth + 'px';
+                currentCanvas.style.height = uploadedImage.clientHeight + 'px';
+                
+                currentCanvas.style.position = 'absolute';
+                currentCanvas.style.top = '0';
+                currentCanvas.style.left = '0';
+                imageContainer.appendChild(currentCanvas);
 
-            // Add mouse event listeners
-            currentCanvas.addEventListener('mousedown', startDrawing);
-            currentCanvas.addEventListener('mousemove', draw);
-            currentCanvas.addEventListener('mouseup', stopDrawing);
+                // Add mouse event listeners
+                currentCanvas.addEventListener('mousedown', startDrawing);
+                currentCanvas.addEventListener('mousemove', draw);
+                currentCanvas.addEventListener('mouseup', stopDrawing);
 
-            // Detect faces
-            const detections = await faceapi
-                .detectAllFaces(uploadedImage, new faceapi.SsdMobilenetv1Options({
-                    minConfidence: 0.1,
-                    maxResults: 100
-                }))
-                .withFaceLandmarks();
+                // Detect faces
+                const detections = await faceapi
+                    .detectAllFaces(uploadedImage, new faceapi.SsdMobilenetv1Options({
+                        minConfidence: 0.1,
+                        maxResults: 100
+                    }))
+                    .withFaceLandmarks();
 
-            lastDetections = faceapi.resizeResults(detections, {
-                width: currentCanvas.width,
-                height: currentCanvas.height
-            });
+                lastDetections = faceapi.resizeResults(detections, {
+                    width: currentCanvas.width,
+                    height: currentCanvas.height
+                });
 
-            // Draw detections
-            const ctx = currentCanvas.getContext('2d');
-            drawAllRectangles(ctx);
-            manualControls.style.display = 'block';
+                // Draw detections
+                const ctx = currentCanvas.getContext('2d');
+                drawAllRectangles(ctx);
+                manualControls.style.display = 'block';
 
-            // Show download button after processing
-            showDownloadButton();
+                // Show download button after processing
+                showDownloadButton();
+            } catch (error) {
+                console.error('Error processing image:', error);
+            } finally {
+                loadingSpinner.style.display = 'none'; // Hide loading spinner
+            }
         };
     });
 
