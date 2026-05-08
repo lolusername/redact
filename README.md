@@ -54,7 +54,8 @@ This metadata removal is crucial for privacy, as photos often contain hidden inf
 
 ### Technical Stack
 
-- Pure JavaScript implementation using Face-API.js
+- Vite-powered static app using plain JavaScript modules
+- Face detection provided by Face-API.js
 - Face detection powered by SSD MobileNet v1 neural network
 - Face landmark detection for improved accuracy
 - Canvas-based image manipulation
@@ -62,7 +63,8 @@ This metadata removal is crucial for privacy, as photos often contain hidden inf
 
 ### Key Components
 
-- `face-api.js`: Provides face detection and landmark recognition
+- `public/lib/face-api/face-api.js`: Provides face detection and landmark recognition
+- `src/`: Contains the app modules for detection, geometry, canvas rendering, and UI state
 - HTML5 Canvas: Handles image manipulation and rectangle drawing
 - Client-side image processing: Strips EXIF data during download
 
@@ -86,8 +88,15 @@ The tool automatically removes all EXIF, IPTC, and XMP metadata from images duri
 ## Getting Started
 
 1. Clone the repository
-2. Open `index.html` in a modern web browser
-3. Start using immediately - no build process required
+2. Install dependencies with `npm install`
+3. Run the local app with `npm run dev`
+4. Build the static site with `npm run build`
+
+Useful commands:
+
+- `npm run test -- --run`: Run unit tests
+- `npm run build`: Build the static site
+- `npm run check`: Run tests and build
 
 ## Browser Compatibility
 

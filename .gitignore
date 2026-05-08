@@ -1,0 +1,4 @@
+.DS_Store
+ARCHITECTURE.local.md
+dist/
+node_modules/
